@@ -17,7 +17,7 @@ class CallbackNewDsl
       :after_exit   => :after_exit_closed
 
     event :close, :before => :before, :after => :after do
-      transitions :to => :closed, :from => [:open]
+      transitions :to => :closed, :from => [:open], :on_transition => :transitioning
     end
 
     event :open, :before => :before, :after => :after do
@@ -25,21 +25,27 @@ class CallbackNewDsl
     end
   end
 
-  def before_enter_open; end
-  def before_exit_open; end
-  def after_enter_open; end
-  def after_exit_open; end
+  def log(text)
+    puts text
+  end
 
-  def before_enter_closed; end
-  def before_exit_closed; end
-  def after_enter_closed; end
-  def after_exit_closed; end
+  def before_enter_open; log('before_enter_open'); end
+  def before_exit_open; log('before_exit_open'); end
+  def after_enter_open; log('after_enter_open'); end
+  def after_exit_open; log('after_exit_open'); end
 
-  def before; end
-  def after; end
+  def before_enter_closed; log('before_enter_closed'); end
+  def before_exit_closed; log('before_exit_closed'); end
+  def after_enter_closed; log('after_enter_closed'); end
+  def after_exit_closed; log('after_exit_closed'); end
 
-  def enter_closed; end
-  def exit_open; end
+  def transitioning; log('transitioning'); end
+
+  def before; log('before'); end
+  def after; log('after'); end
+
+  def enter_closed; log('enter_closed'); end
+  def exit_open; log('exit_open'); end
 end
 
 class CallbackNewDslArgs

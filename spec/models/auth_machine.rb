@@ -8,7 +8,7 @@ class AuthMachine
     state :pending, :initial => true, :enter => :make_activation_code
     state :active,  :enter => :do_activate
     state :suspended
-    state :deleted, :enter => :do_delete, :exit => :do_undelete
+    state :deleted, :enter => :do_delete#, :exit => :do_undelete
     state :waiting
 
     event :register do
