@@ -1,5 +1,6 @@
 module AASM
   class Base
+    attr_reader :state_machine
 
     def initialize(klass, options={}, &block)
       @klass = klass

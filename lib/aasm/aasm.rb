@@ -8,6 +8,25 @@ module AASM
     AASM::StateMachine[base] ||= AASM::StateMachine.new
 
     AASM::Persistence.load_persistence(base)
+
+    base.class_eval do
+      unless method_defined?(:new_initialize)
+        alias_method :new_initialize, :initialize
+        define_method(:initialize) do |*args|
+          new_initialize(*args)
+          default_machine_column = base.aasm.state_machine.config.column
+          # Check 1 : for non ActiveRecord-like setups.
+          # Check 2 : for ActiveRecord-like setups and non default values of default_machine_column.
+          # Check 3 : for ActiveRecord-like setups and default values of default_machine_column.
+          unless ( respond_to?(default_machine_column) &&
+                   send(default_machine_column) &&
+                   aasm.instance_variable_defined?(:@current_event)
+                 )
+            self.aasm.enter_initial_state
+          end
+        end
+      end
+    end
     super
   end
 
